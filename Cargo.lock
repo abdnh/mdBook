@@ -241,8 +241,7 @@ checksum = "e78d4f1cc4ae33bbfc157ed5d5a5ef3bc29227303d595861deb238fcec4e9457"
 [[package]]
 name = "elasticlunr-rs"
 version = "2.3.11"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "959fbc9a6ebced545cbe365fdce5e25c6ab7683f2ca4ecc9fb9d0db663bf73d5"
+source = "git+https://github.com/abdnh/elasticlunr-rs?branch=arabic#1486609fb4e84a95429c24162211991a996a8aae"
 dependencies = [
  "lazy_static",
  "regex",

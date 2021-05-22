@@ -2,7 +2,7 @@ use std::borrow::Cow;
 use std::collections::{HashMap, HashSet};
 use std::path::Path;
 
-use elasticlunr::Index;
+use elasticlunr::{Index, Language};
 use pulldown_cmark::*;
 
 use crate::book::{Book, BookItem};
@@ -13,7 +13,8 @@ use crate::utils;
 
 /// Creates all files required for search.
 pub fn create_files(search_config: &Search, destination: &Path, book: &Book) -> Result<()> {
-    let mut index = Index::new(&["title", "body", "breadcrumbs"]);
+    // let mut index = Index::new(&["title", "body", "breadcrumbs"]);
+    let mut index = Index::with_language(Language::Arabic, &["title", "body", "breadcrumbs"]);
     let mut doc_urls = Vec::with_capacity(book.sections.len());
 
     for item in book.iter() {
@@ -36,6 +37,7 @@ pub fn create_files(search_config: &Search, destination: &Path, book: &Book) -> 
         utils::fs::write_file(destination, "searcher.js", searcher::JS)?;
         utils::fs::write_file(destination, "mark.min.js", searcher::MARK_JS)?;
         utils::fs::write_file(destination, "elasticlunr.min.js", searcher::ELASTICLUNR_JS)?;
+        utils::fs::write_file(destination, "lunr.ar.js", searcher::LUNR_AR_JS)?;
         debug!("Copying search files ✓");
     }
 
