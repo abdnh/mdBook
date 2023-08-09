@@ -303,6 +303,9 @@
 
         {{#if search_js}}
         <script src="{{ path_to_root }}elasticlunr.min.js"></script>
+        {{#if ar_search}}
+        <script src="{{ path_to_root }}lunr.ar.js" type="text/javascript"></script>
+        {{/if}}
         <script src="{{ path_to_root }}mark.min.js"></script>
         <script src="{{ path_to_root }}searcher.js"></script>
         {{/if}}

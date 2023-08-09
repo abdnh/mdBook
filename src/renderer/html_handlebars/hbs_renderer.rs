@@ -745,6 +745,15 @@ fn make_data(
             "search_js".to_owned(),
             json!(search.enable && search.copy_js),
         );
+        let ar_search = if cfg!(feature = "arabic-search") {
+            true
+        } else {
+            false
+        };
+        data.insert(
+            "ar_search".to_owned(),
+            json!(ar_search),
+        );
     } else if search.is_some() {
         warn!("mdBook compiled without search support, ignoring `output.html.search` table");
         warn!(

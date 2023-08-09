@@ -2,7 +2,7 @@ use std::borrow::Cow;
 use std::collections::{HashMap, HashSet};
 use std::path::Path;
 
-use elasticlunr::{Index, IndexBuilder};
+use elasticlunr::{Index, IndexBuilder, lang::from_code};
 use once_cell::sync::Lazy;
 use pulldown_cmark::*;
 
@@ -27,11 +27,15 @@ fn tokenize(text: &str) -> Vec<String> {
 
 /// Creates all files required for search.
 pub fn create_files(search_config: &Search, destination: &Path, book: &Book) -> Result<()> {
-    let mut index = IndexBuilder::new()
+    let mut index = if cfg!(feature = "arabic-search") {
+        Index::with_language(from_code("ar").unwrap(), &["title", "body", "breadcrumbs"])
+    } else {
+        IndexBuilder::new()
         .add_field_with_tokenizer("title", Box::new(&tokenize))
         .add_field_with_tokenizer("body", Box::new(&tokenize))
         .add_field_with_tokenizer("breadcrumbs", Box::new(&tokenize))
-        .build();
+        .build()
+    };
 
     let mut doc_urls = Vec::with_capacity(book.sections.len());
 
@@ -55,6 +59,8 @@ pub fn create_files(search_config: &Search, destination: &Path, book: &Book) -> 
         utils::fs::write_file(destination, "searcher.js", searcher::JS)?;
         utils::fs::write_file(destination, "mark.min.js", searcher::MARK_JS)?;
         utils::fs::write_file(destination, "elasticlunr.min.js", searcher::ELASTICLUNR_JS)?;
+        #[cfg(feature = "arabic-search")]
+        utils::fs::write_file(destination, "lunr.ar.js", searcher::LUNR_AR_JS)?;
         debug!("Copying search files ✓");
     }
 
